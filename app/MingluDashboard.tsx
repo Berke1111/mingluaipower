@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { FiMenu, FiX, FiSettings, FiClock, FiZap } from "react-icons/fi";
 import { SignedIn, SignedOut, SignIn, UserButton } from "@clerk/nextjs";
+import ThumbnailGenerator from "./ThumbnailGenerator";
 
 const SIDEBAR_ITEMS = [
   { key: "generate", label: "Generate", icon: <FiZap /> },
@@ -190,7 +191,7 @@ export default function MingluDashboard() {
   const renderView = () => {
     switch (activeView) {
       case "generate":
-        return <GenerateView />;
+        return <ThumbnailGenerator />;
       case "history":
         return <HistoryView />;
       case "settings":
@@ -202,43 +203,55 @@ export default function MingluDashboard() {
 
   // Sidebar content
   const Sidebar = (
-    <nav
-      className="flex flex-col h-full w-[250px] bg-[#181818] border-r border-[#222] py-8 px-4 z-40"
-      aria-label="Sidebar Navigation"
-    >
-      <ul className="flex flex-col gap-2 flex-1">
-        {SIDEBAR_ITEMS.map((item) => (
-          <li key={item.key}>
-            <button
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-red-500
+    <div className="relative h-full">
+      {/* Minglu AI Title */}
+      <div className="w-full flex items-center justify-center py-4">
+        <span className="text-2xl font-extrabold tracking-wide text-white drop-shadow-md">Minglu AI</span>
+      </div>
+      {/* Top RGB Line */}
+      <div className="absolute top-0 left-0 w-full h-[2px] sidebar-rgb-frame z-50" />
+      {/* Right RGB Line */}
+      <div className="absolute top-0 right-0 h-full w-[2px] sidebar-rgb-frame z-50" />
+      {/* Bottom RGB Line */}
+      <div className="absolute bottom-0 left-0 w-full h-[2px] sidebar-rgb-frame z-50" />
+      <nav
+        className="flex flex-col h-full w-[250px] bg-[#181818] border-r border-[#222] py-8 px-4 z-40"
+        aria-label="Sidebar Navigation"
+      >
+        <ul className="flex flex-col gap-2 flex-1">
+          {SIDEBAR_ITEMS.map((item) => (
+            <li key={item.key}>
+              <button
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500
                 ${activeView === item.key
-                  ? "bg-[#232323] text-white border-l-4 border-red-600"
-                  : "text-gray-300 hover:bg-[#232323] hover:text-white"}
+                  ? "bg-[#232323] text-white border-l-4 border-red-600 shadow-lg"
+                  : "text-gray-300 hover:bg-[#232323] hover:text-white hover:scale-105 hover:brightness-110 hover:shadow-md"}
               `}
-              style={activeView === item.key ? { color: RED } : {}}
-              onClick={() => {
-                setActiveView(item.key);
-                setSidebarOpen(false);
-              }}
-              aria-current={activeView === item.key ? "page" : undefined}
-            >
-              <span className="text-lg">{item.icon}</span>
-              {item.label}
-            </button>
-          </li>
-        ))}
-      </ul>
-      {/* UserButton at bottom when signed in */}
-      <SignedIn>
-        <div className="mt-8 flex items-center justify-center">
-          <UserButton appearance={{
-            elements: {
-              avatarBox: "w-10 h-10 border-2 border-red-600",
-            },
-          }} />
-        </div>
-      </SignedIn>
-    </nav>
+                style={activeView === item.key ? { color: RED } : {}}
+                onClick={() => {
+                  setActiveView(item.key);
+                  setSidebarOpen(false);
+                }}
+                aria-current={activeView === item.key ? "page" : undefined}
+              >
+                <span className="text-lg">{item.icon}</span>
+                {item.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+        {/* UserButton at bottom when signed in */}
+        <SignedIn>
+          <div className="mt-8 flex items-center justify-center">
+            <UserButton appearance={{
+              elements: {
+                avatarBox: "w-10 h-10 border-2 border-red-600 transition-transform duration-200 hover:scale-105 hover:shadow-lg",
+              },
+            }} />
+          </div>
+        </SignedIn>
+      </nav>
+    </div>
   );
 
   return (
